@@ -1,0 +1,113 @@
+name: 'Shellscribe Documentation Generator'
+description: 'Generate professional documentation for your shell scripts using Shellscribe'
+author: 'tomcdj71'
+branding:
+  icon: 'book'
+  color: 'blue'
+
+inputs:
+  source_path:
+    description: 'Path to the script(s) or directory to document'
+    required: true
+    default: './'
+  doc_path:
+    description: 'Destination folder for generated files'
+    required: false
+    default: './docs'
+  doc_filename:
+    description: 'Base name of the generated file'
+    required: false
+    default: 'shell_doc'
+  format:
+    description: 'Output format for the documentation'
+    required: false
+    default: 'markdown'
+  generate_index:
+    description: 'Creates an index file for multiple scripts'
+    required: false
+    default: 'false'
+  log_level:
+    description: 'Log level (normal, verbose)'
+    required: false
+    default: 'normal'
+  show_toc:
+    description: 'Enables table of contents'
+    required: false
+    default: 'false'
+  show_alerts:
+    description: 'Displays alert blocks'
+    required: false
+    default: 'false'
+  show_shellcheck:
+    description: 'Displays shellcheck directives'
+    required: false
+    default: 'false'
+  shellcheck_display:
+    description: 'Presentation style for shellcheck results (table, sequential)'
+    required: false
+    default: 'sequential'
+  highlight_code:
+    description: 'Enables syntax highlighting'
+    required: false
+    default: 'true'
+  highlight_language:
+    description: 'Language for example code highlighting'
+    required: false
+    default: 'bash'
+  example_display:
+    description: 'Presentation style for examples (tabs, sequential)'
+    required: false
+    default: 'sequential'
+  arguments_display:
+    description: 'Presentation style for arguments (table, sequential)'
+    required: false
+    default: 'sequential'
+  traverse_symlinks:
+    description: 'Follow symbolic links when processing directories'
+    required: false
+    default: 'true'
+  linkify_usernames:
+    description: 'Convert GitHub usernames to links'
+    required: false
+    default: 'false'
+  version_placement:
+    description: 'Where to display version info (about, filename)'
+    required: false
+    default: 'about'
+  copyright_placement:
+    description: 'Where to display copyright info (about, footer)'
+    required: false
+    default: 'about'
+  license_placement:
+    description: 'Where to display license info (about, footer)'
+    required: false
+    default: 'about'
+  configuration_file:
+    description: 'Path to custom configuration file'
+    required: false
+    default: ''
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.source_path }}
+    - ${{ inputs.doc_path }}
+    - ${{ inputs.doc_filename }}
+    - ${{ inputs.format }}
+    - ${{ inputs.generate_index }}
+    - ${{ inputs.log_level }}
+    - ${{ inputs.show_toc }}
+    - ${{ inputs.show_alerts }}
+    - ${{ inputs.show_shellcheck }}
+    - ${{ inputs.shellcheck_display }}
+    - ${{ inputs.highlight_code }}
+    - ${{ inputs.highlight_language }}
+    - ${{ inputs.example_display }}
+    - ${{ inputs.arguments_display }}
+    - ${{ inputs.traverse_symlinks }}
+    - ${{ inputs.linkify_usernames }}
+    - ${{ inputs.version_placement }}
+    - ${{ inputs.copyright_placement }}
+    - ${{ inputs.license_placement }}
+    - ${{ inputs.configuration_file }} 

@@ -1,0 +1,61 @@
+name: Test Shellscribe Action
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup test script
+        run: |
+          mkdir -p test_scripts
+          cat > test_scripts/example.sh << 'EOF'
+          #!/usr/bin/env bash
+          # @file test_scripts/example.sh
+          # @description Example script for testing the Shellscribe GitHub Action
+          # @author tomcdj71
+          # @version 1.0.0
+
+          # @function hello_world
+          # @brief Prints a hello world message
+          # @arg $1 string Name to greet
+          # @exitcode 0 Success
+          # @stdout Greeting message
+          hello_world() {
+            local name="${1:-World}"
+            echo "Hello, $name!"
+            return 0
+          }
+
+          # Run the function
+          hello_world "$@"
+          EOF
+          chmod +x test_scripts/example.sh
+      
+      - name: Test Shellscribe Action
+        uses: ./
+        with:
+          source_path: './test_scripts'
+          doc_path: './docs'
+          doc_filename: 'example_doc'
+          show_toc: 'true'
+          highlight_code: 'true'
+          linkify_usernames: 'true'
+      
+      - name: Verify documentation
+        run: |
+          if [ ! -f "./docs/example.md" ]; then
+            echo "Documentation file not found"
+            exit 1
+          fi
+          
+          echo "Documentation generated successfully:"
+          cat ./docs/example.md

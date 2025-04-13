@@ -1,0 +1,38 @@
+name: Publish to GitHub Marketplace
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Validate action.yml
+        run: |
+          if ! grep -q "name:" action.yml; then
+            echo "Error: action.yml is missing a name field"
+            exit 1
+          fi
+          if ! grep -q "description:" action.yml; then
+            echo "Error: action.yml is missing a description field"
+            exit 1
+          fi
+          if ! grep -q "runs:" action.yml; then
+            echo "Error: action.yml is missing a runs field"
+            exit 1
+          fi
+          echo "action.yml is valid"
+          
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          tags: shellscribe-action:${{ github.event.release.tag_name }}
+          
+      - name: Output release URL
+        run: echo "Release is published at ${{ github.event.release.html_url }}"
